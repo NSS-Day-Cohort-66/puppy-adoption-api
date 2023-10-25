@@ -1,32 +1,63 @@
 import sqlite3
 
-class Agency():
+DB_PATH = "./puppies.db"
+
+class Agency:
+
     def __init__(self):
         self.id = 0
         self.name = ""
         self.address = ""
         self.phone_number = ""
         self.email_address = ""
-        self.database_path = "./puppies.db"
+        self.animal_count = 0
 
-    def create(self, id, name, address, phone_number, email_address):
-        self.id = id
-        self.name = name
-        self.address = address
-        self.phone_number = phone_number
-        self.email_address = email_address
-        return self
+    def create(self, id, name, address, phone_number, email_address, animal_count):
+        agency = Agency()
+        agency.id = id
+        agency.name = name
+        agency.address = address
+        agency.phone_number = phone_number
+        agency.email_address = email_address
+        agency.animal_count = animal_count
+        return agency
 
-    def get_single(self, id):
+    def get_single(self, pk):
         sql = """
-
+        SELECT
+            c.id,
+            c.address,
+            c.name,
+            c.phone_number,
+            c.email_address,
+            COUNT(a.id) AS animal_count
+        FROM
+            Center c
+        LEFT JOIN
+            Animal a ON c.id = a.center_id
+        LEFT JOIN
+            Adoption ad ON a.id = ad.animal_id
+        WHERE
+            ad.id IS NULL
+            AND a.id = ?
+        GROUP BY
+            c.id
         """
-
-        with sqlite3.connect(self.database_path) as conn:
+        with sqlite3.connect(DB_PATH) as conn:
             conn.row_factory = sqlite3.Row
             db_cursor = conn.cursor()
             db_cursor.execute(sql, (pk,))
-            return db_cursor.fetchone()
+            row = db_cursor.fetchone()
+
+        new_agency = self.create(
+            row["id"],
+            row["name"],
+            row["address"],
+            row["phone_number"],
+            row["email_address"],
+            row["animal_count"],
+        )
+        return new_agency.__dict__
 
     def get_all(self):
         sql = """
@@ -48,7 +79,7 @@ class Agency():
         GROUP BY
             c.id
         """
-        with sqlite3.connect(self.database_path) as conn:
+        with sqlite3.connect(DB_PATH) as conn:
             conn.row_factory = sqlite3.Row
             db_cursor = conn.cursor()
             db_cursor.execute(sql)
@@ -57,8 +88,14 @@ class Agency():
             agencies = []
 
             for row in rows:
-                new_agency = self.create(row['id'], row['name'], row['address'],
-                           row['phone_number'], row['email_address'])
+                new_agency = self.create(
+                    row["id"],
+                    row["name"],
+                    row["address"],
+                    row["phone_number"],
+                    row["email_address"],
+                    row["animal_count"],
+                )
 
                 agencies.append(new_agency.__dict__)
 
