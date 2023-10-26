@@ -83,5 +83,5 @@ LEFT JOIN
     Adoption ad ON a.id = ad.animal_id
 WHERE
     ad.id IS NULL
-    AND c.id = 3
+    AND c.id = 5
 ;
