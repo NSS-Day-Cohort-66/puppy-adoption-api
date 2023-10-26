@@ -4,7 +4,7 @@ from nss_handler import HandleRequests, status
 
 
 # Add your imports below this line
-from views import ShippingShipsView, HaulerView, DocksView
+from views import AgencyView
 
 
 class JSONServer(HandleRequests):
@@ -12,20 +12,7 @@ class JSONServer(HandleRequests):
     def do_GET(self):
         url = self.parse_url(self.path)
         view = self.determine_view(url)
-
-        try:
-            view.get(self, url["pk"])
-        except AttributeError:
-            return self.response("No view for that route", status.HTTP_404_CLIENT_ERROR_RESOURCE_NOT_FOUND.value)
-
-    def do_PUT(self):
-        url = self.parse_url(self.path)
-        view = self.determine_view(url)
-
-        try:
-            view.update(self, self.get_request_body(), url["pk"])
-        except AttributeError:
-            return self.response("No view for that route", status.HTTP_404_CLIENT_ERROR_RESOURCE_NOT_FOUND.value)
+        view.get(self, url["pk"])
 
     def do_POST(self):
         # Parse the URL
@@ -39,16 +26,13 @@ class JSONServer(HandleRequests):
         # Make sure you handle the AttributeError in case the client requested a route that you don't support
 
         # Once you implement this method, delete the following line of code
-        return self.response("", status.HTTP_405_UNSUPPORTED_METHOD.value)
+        return self.response("", status.HTTP_405_UNSUPPORTED)
+
+    def do_PUT(self):
+        self.response("Unsupported method", status.HTTP_405_UNSUPPORTED)
 
     def do_DELETE(self):
-        url = self.parse_url(self.path)
-        view = self.determine_view(url)
-
-        try:
-            view.delete(self, url["pk"])
-        except AttributeError:
-            return self.response("No view for that route", status.HTTP_404_CLIENT_ERROR_RESOURCE_NOT_FOUND.value)
+        self.response("Unsupported method", status.HTTP_405_UNSUPPORTED)
 
 
 
@@ -72,15 +56,13 @@ class JSONServer(HandleRequests):
         """
         try:
             routes = {
-                "docks": DocksView,
-                "haulers": HaulerView,
-                "ships": ShippingShipsView,
+                "agencies": AgencyView
             }
 
             matching_class = routes[url["requested_resource"]]
             return matching_class()
         except KeyError:
-            return status.HTTP_404_CLIENT_ERROR_RESOURCE_NOT_FOUND.value
+            self.response("No view for that route", status.HTTP_404_NOT_FOUND)
 
 
 

@@ -60,12 +60,11 @@ INSERT INTO Animal (name, age, image_url, center_id) VALUES
 ('Charlie', 1, 'https://dog.ceo/api/breeds/image/random', 1),
 ('Lucy', 1, 'https://dog.ceo/api/breeds/image/random', 1),
 ('Max', 1, 'https://dog.ceo/api/breeds/image/random', 1),
-('Luna', 1, 'https://dog.ceo/api/breeds/image/random', 1),
-('Rocky', 1, 'https://dog.ceo/api/breeds/image/random', 1),
-('Daisy', 1, 'https://dog.ceo/api/breeds/image/random', 1);
+('Luna', 1, 'https://dog.ceo/api/breeds/image/random', 1);
 
 -- Center B
 INSERT INTO Animal (name, age, image_url, center_id) VALUES
+('Daisy', 1, 'https://dog.ceo/api/breeds/image/random', 2),
 ('Milo', 1, 'https://dog.ceo/api/breeds/image/random', 2),
 ('Zoe', 1, 'https://dog.ceo/api/breeds/image/random', 2),
 ('Toby', 1, 'https://dog.ceo/api/breeds/image/random', 2),
@@ -81,18 +80,10 @@ INSERT INTO Animal (name, age, image_url, center_id) VALUES
 ('Rosie', 1, 'https://dog.ceo/api/breeds/image/random', 3),
 ('Teddy', 1, 'https://dog.ceo/api/breeds/image/random', 3),
 ('Ruby', 1, 'https://dog.ceo/api/breeds/image/random', 3),
-('Jake', 1, 'https://dog.ceo/api/breeds/image/random', 3),
-('Sophie', 1, 'https://dog.ceo/api/breeds/image/random', 3),
-('Cody', 1, 'https://dog.ceo/api/breeds/image/random', 3),
-('Lily', 1, 'https://dog.ceo/api/breeds/image/random', 3);
+('Jake', 1, 'https://dog.ceo/api/breeds/image/random', 3);
 
 -- Center D
 INSERT INTO Animal (name, age, image_url, center_id) VALUES
-('Oliver', 1, 'https://dog.ceo/api/breeds/image/random', 4),
-('Chloe', 1, 'https://dog.ceo/api/breeds/image/random', 4),
-('Zeus', 1, 'https://dog.ceo/api/breeds/image/random', 4),
-('Riley', 1, 'https://dog.ceo/api/breeds/image/random', 4),
-('Murphy', 1, 'https://dog.ceo/api/breeds/image/random', 4),
 ('Angel', 1, 'https://dog.ceo/api/breeds/image/random', 4),
 ('Duke', 1, 'https://dog.ceo/api/breeds/image/random', 4),
 ('Missy', 1, 'https://dog.ceo/api/breeds/image/random', 4);
@@ -107,30 +98,5 @@ INSERT INTO Adoption (animal_id, adopter_id, date_of_adoption) VALUES
 (2, 2, '2023-10-25');
 
 
-SELECT
-    a.id,
-    a.name,
-    ad.id
-FROM Animal a
-LEFT JOIN Adoption ad ON ad.animal_id = a.id
-;
-
-
-SELECT
-    c.id,
-    c.address,
-    c.name,
-    c.phone_number,
-    c.email_address,
-    COUNT(a.id) AS animal_count
-FROM
-    Center c
-LEFT JOIN
-    Animal a ON c.id = a.center_id
-LEFT JOIN
-    Adoption ad ON a.id = ad.animal_id
-WHERE
-    ad.id IS NULL
-GROUP BY
-    c.id
-;
+INSERT INTO Center (address, name, phone_number, email_address) VALUES
+('456 Pennsylvania Avenue, Washington', 'Washington DC', '123-456-7890', 'haha@yousuck.com');\

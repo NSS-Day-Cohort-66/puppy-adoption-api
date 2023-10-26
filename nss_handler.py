@@ -6,11 +6,11 @@ from http.server import BaseHTTPRequestHandler
 
 class status(Enum):
     HTTP_200_SUCCESS = 200
-    HTTP_201_SUCCESS_CREATED = 201
-    HTTP_204_SUCCESS_NO_RESPONSE_BODY = 204
-    HTTP_400_CLIENT_ERROR_BAD_REQUEST_DATA = 400
-    HTTP_404_CLIENT_ERROR_RESOURCE_NOT_FOUND = 404
-    HTTP_405_UNSUPPORTED_METHOD = 405
+    HTTP_201_CREATED = 201
+    HTTP_204_SUCCESS_NO_BODY = 204
+    HTTP_400_BAD_REQUEST = 400
+    HTTP_404_NOT_FOUND = 404
+    HTTP_405_UNSUPPORTED = 405
     HTTP_500_SERVER_ERROR = 500
 
 class HandleRequests(BaseHTTPRequestHandler):
@@ -22,7 +22,7 @@ class HandleRequests(BaseHTTPRequestHandler):
             body (any): Data to send in response
             code (int): HTTP response code
         """
-        self.set_response_code(code)
+        self.set_response_code(code.value)
         self.wfile.write(body.encode())
 
     def get_request_body(self):
@@ -60,8 +60,8 @@ class HandleRequests(BaseHTTPRequestHandler):
 
         return url_dictionary
 
-    def set_response_code(self, status):
-        self.send_response(status)
+    def set_response_code(self, status_code):
+        self.send_response(status_code)
         self.send_header('Content-type', 'application/json')
         self.send_header('Access-Control-Allow-Origin', '*')
         self.end_headers()
