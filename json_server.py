@@ -12,20 +12,7 @@ class JSONServer(HandleRequests):
     def do_GET(self):
         url = self.parse_url(self.path)
         view = self.determine_view(url)
-
-        try:
-            view.get(self, url["pk"])
-        except AttributeError:
-            return self.response("No view for that route", status.HTTP_404_NOT_FOUND)
-
-    def do_PUT(self):
-        url = self.parse_url(self.path)
-        view = self.determine_view(url)
-
-        try:
-            view.update(self, self.get_request_body(), url["pk"])
-        except AttributeError:
-            return self.response("No view for that route", status.HTTP_404_NOT_FOUND)
+        view.get(self, url["pk"])
 
     def do_POST(self):
         # Parse the URL
@@ -41,14 +28,11 @@ class JSONServer(HandleRequests):
         # Once you implement this method, delete the following line of code
         return self.response("", status.HTTP_405_UNSUPPORTED)
 
-    def do_DELETE(self):
-        url = self.parse_url(self.path)
-        view = self.determine_view(url)
+    def do_PUT(self):
+        self.response("Unsupported method", status.HTTP_405_UNSUPPORTED)
 
-        try:
-            view.delete(self, url["pk"])
-        except AttributeError:
-            return self.response("No view for that route", status.HTTP_404_NOT_FOUND)
+    def do_DELETE(self):
+        self.response("Unsupported method", status.HTTP_405_UNSUPPORTED)
 
 
 
@@ -78,7 +62,7 @@ class JSONServer(HandleRequests):
             matching_class = routes[url["requested_resource"]]
             return matching_class()
         except KeyError:
-            return status.HTTP_404_NOT_FOUND.value
+            self.response("No view for that route", status.HTTP_404_NOT_FOUND)
 
 
 

@@ -38,3 +38,50 @@ LEFT JOIN
 WHERE
     ad.id IS NULL
 ;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+SELECT
+    c.id,
+    c.address,
+    c.name,
+    c.phone_number,
+    c.email_address,
+    a.id animal_id,
+    a.name animal_name,
+    a.age animal_age,
+    a.center_id animal_center_id
+FROM
+    Center c
+LEFT JOIN
+    Animal a ON c.id = a.center_id
+LEFT JOIN
+    Adoption ad ON a.id = ad.animal_id
+WHERE
+    ad.id IS NULL
+    AND c.id = 3
+;

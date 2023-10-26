@@ -98,3 +98,5 @@ INSERT INTO Adoption (animal_id, adopter_id, date_of_adoption) VALUES
 (2, 2, '2023-10-25');
 
 
+INSERT INTO Center (address, name, phone_number, email_address) VALUES
+('456 Pennsylvania Avenue, Washington', 'Washington DC', '123-456-7890', 'haha@yousuck.com');\
